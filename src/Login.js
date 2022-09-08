@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import belt from '../src/assests/belt.jpg'
-import laptop from '../src/assests/laptop.jpg'
-import phone from '../src/assests/phone.jpg'
-import shoe from '../src/assests/shoe.jpg'
-import slipper from '../src/assests/slipper.jpg'
-import spoon from '../src/assests/spoon.jpg'
-import watch from '../src/assests/watch.jpg'
+import belt from "../src/assests/belt.jpg";
+import laptop from "../src/assests/laptop.jpg";
+import phone from "../src/assests/phone.jpg";
+import shoe from "../src/assests/shoe.jpg";
+import slipper from "../src/assests/slipper.jpg";
+import spoon from "../src/assests/spoon.jpg";
+import watch from "../src/assests/watch.jpg";
+import './Login.css'
+import { BsFillPlusSquareFill } from "react-icons/bs";
 
 function Login() {
   const [userName, setName] = useState("");
@@ -14,36 +16,30 @@ function Login() {
   const [password, setPassword] = useState("");
   const [submit, setSubmit] = useState(false);
   const [datas, setData] = useState([]);
-  const [image,setImage] = useState[
-    {
-    id:1,
-    img:laptop
-  },
-  {
-    id:2,
-    img:phone
-  },
-  {
-    id:3,
-    img:shoe
-  },
-  {
-    id:4,
-    img:slipper
-  },
-  {
-    id:5,
-    img:spoon
-  },
-{
-  id:6,
-  img:watch
-},
-{
-  id:7,
-  img:belt
-}];
-  
+  const [icon, setIcon] = useState([])
+  const image=[
+        {
+        img: laptop,
+      },
+      {
+        img: phone,
+      },
+      {
+        img: belt,
+      },
+      {
+        img: shoe,
+      },
+      {
+        img: slipper,
+      },
+      {
+        img: watch,
+      },
+      {
+        img: spoon,
+      }
+    ];
 
   const handleSubmit = () => {
     if (userName === "") {
@@ -56,56 +52,57 @@ function Login() {
     } else {
       setPassError("");
     }
-    
     let late = {
       username: userName,
       password: password,
     };
-    
+
     fetch("http://54.174.247.198:9000/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(late),
     })
       .then((response) => response.json())
-      .then((data) =>{
+      .then((data) => {
         if (data?.message === "password does not match") {
-          alert("password")
-        }else if(data?.message === "no user found"){
-          alert("no user found")
-
-        }else{
-          setSubmit(true)
-
+          alert("password");
+        } else if (data?.message === "no user found") {
+          alert("no user found");
+        } else {
+          setSubmit(true);
         }
-       
-        localStorage.setItem("Authorization", `Bearer ${data.data.token}`)
-      }
-        
-      );
+
+        localStorage.setItem("Authorization", `Bearer ${data.data.token}`);
+      });
 
     fetch("http://54.174.247.198:9000/api/listproduct", {
       method: "GET",
-      headers:{  "Authorization": localStorage.getItem("Authorization")},
-    }).then(x=>x.json())
-      .then((data)=> setData(
-        data?.result
-        ))
-      
+      headers: { Authorization: localStorage.getItem("Authorization") },
+    })
+      .then((x) => x.json())
+      .then((data)=>{
+      let a= data?.result.map((x,i)=>{
+        x.image=image[i].img
+        return x
+      })
+      setData(a)
+      })
   };
-  
+  const addCart = () =>{
+
+  }
 
   return (
     <div>
       {!submit && (
-        <div>
-          <div>Login</div>
-          <label>User Name</label>
+        <div className="text-center top">
+          <div className="mb-4">Login Now!</div>
           <input
             type="text"
             placeholder="Name"
             onChange={(e) => setName(e.target.value)}
             name="username"
+            className="mb-4"
           ></input>
           {nameerr === "" ? null : (
             <span
@@ -118,33 +115,42 @@ function Login() {
             </span>
           )}
           <br />
-          <label>Password</label>
           <input
             type="password"
             placeholder="Password"
             name="password"
             onChange={(e) => setPassword(e.target.value)}
+            className="mb-4"
           />
           {passerr === "" ? null : (
             <span style={{ fontWeight: "bold", color: "red" }}>{passerr}</span>
           )}
           <br />
-          <button onClick={handleSubmit}>Submit</button>
+          <button onClick={handleSubmit} className="btn btn-primary">Login</button>
         </div>
       )}
       {submit && (
         <div>
           <div>Welcome:{userName}</div>
+          <div className="product">
           {datas?.map((d) => (
-            <div key={d.id}>
+            <div key={d.id} >
+              <img src={d.image} alt="" width="100" height="100"></img>
+              <div className="d-flex justify-content-between">
+                <div>
               <p>{d.productsName}</p>
               <p>{d.productPrice}</p>
+              </div>
+              <BsFillPlusSquareFill className="mt-3" onClick={(e) => addCart(e.target.value)}/>
+              </div>
             </div>
           ))}
+          </div>
         </div>
       )}
     </div>
   );
 }
+
 
 export default Login;

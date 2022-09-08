@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import './Login.css'
 
 function Task() {
   const [name, setName] = useState("");
@@ -11,7 +12,6 @@ function Task() {
   const [phoneerr, setPhoneError] = useState("");
   const [submit, setSubmit] = useState(false);
   const [datas, setData] = useState([]);
-  // var mailformat = "/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/";
 
   const handleSubmit = () => {
     if (name === "") {
@@ -24,15 +24,10 @@ function Task() {
     } else {
       setEmailError("");
     }
-    // if(email !== mailformat){
-    //   setEmailError("Email format is incorrect")
-    // }else{
-    //   setEmailError("")
-    // }
     if (phone.length > 10) {
       setPhoneError("Phone number exceeds Ten digits");
     } else if (phone.length < 10) {
-      setPhoneError("Phone number smal Ten digits");
+      setPhoneError("Phone number less than Ten digits");
     } else {
       setPhoneError("");
     }
@@ -63,16 +58,16 @@ function Task() {
   };
 
   return (
-    <div>
+    <div className="image">
       {!submit && (
-        <div>
-          <div>Register</div>
-          <label>Name</label>
+        <div className="text-center top">
+          <div className="mb-4">Register Now!</div>
           <input
             type="text"
             placeholder="Name"
             onChange={(e) => setName(e.target.value)}
             name="name"
+            className="mb-4"
           ></input>
           {nameerr === "" ? null : (
             <span
@@ -85,40 +80,40 @@ function Task() {
             </span>
           )}
           <br />
-          <label>Email</label>
           <input
             type="email"
             placeholder="Email"
             name="email"
             onChange={(e) => setEmail(e.target.value)}
+            className="mb-4"
           />
           {emailerr === "" ? null : (
             <span style={{ fontWeight: "bold", color: "red" }}>{emailerr}</span>
           )}
           <br />
-          <label>Password</label>
           <input
             type="password"
             placeholder="Password"
             name="pasword"
             onChange={(e) => setPassword(e.target.value)}
+            className="mb-4"
           />
           {passerr === "" ? null : (
             <span style={{ fontWeight: "bold", color: "red" }}>{passerr}</span>
           )}
           <br />
-          <label>Phone Number</label>
           <input
             type="number"
             placeholder="Phone Number"
             name="phone"
             onChange={(e) => setPhone(e.target.value)}
+            className="mb-4"
           />
           {phoneerr === "" ? null : (
             <span style={{ fontWeight: "bold", color: "red" }}>{phoneerr}</span>
           )}
           <br />
-          <button onClick={handleSubmit}>Submit</button>
+          <button onClick={handleSubmit} className="btn btn-primary">Register</button>
         </div>
       )}
       {submit && (
