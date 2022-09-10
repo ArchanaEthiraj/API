@@ -6,7 +6,7 @@ import shoe from "../src/assests/shoe.jpg";
 import slipper from "../src/assests/slipper.jpg";
 import spoon from "../src/assests/spoon.jpg";
 import watch from "../src/assests/watch.jpg";
-import './Login.css'
+import "./Login.css";
 import { BsFillPlusSquareFill } from "react-icons/bs";
 
 function Login() {
@@ -14,32 +14,34 @@ function Login() {
   const [nameerr, setNameError] = useState("");
   const [passerr, setPassError] = useState("");
   const [password, setPassword] = useState("");
+  const [date, setDate] = useState("");
+
   const [submit, setSubmit] = useState(false);
   const [datas, setData] = useState([]);
-  const [icon, setIcon] = useState([])
-  const image=[
-        {
-        img: laptop,
-      },
-      {
-        img: phone,
-      },
-      {
-        img: belt,
-      },
-      {
-        img: shoe,
-      },
-      {
-        img: slipper,
-      },
-      {
-        img: watch,
-      },
-      {
-        img: spoon,
-      }
-    ];
+  const [icon, setIcon] = useState([]);
+  const image = [
+    {
+      img: laptop,
+    },
+    {
+      img: phone,
+    },
+    {
+      img: belt,
+    },
+    {
+      img: shoe,
+    },
+    {
+      img: slipper,
+    },
+    {
+      img: watch,
+    },
+    {
+      img: spoon,
+    },
+  ];
 
   const handleSubmit = () => {
     if (userName === "") {
@@ -80,17 +82,28 @@ function Login() {
       headers: { Authorization: localStorage.getItem("Authorization") },
     })
       .then((x) => x.json())
-      .then((data)=>{
-      let a= data?.result.map((x,i)=>{
-        x.image=image[i].img
-        return x
-      })
-      setData(a)
-      })
+      .then((data) => {
+        let a = data?.result.map((x, i) => {
+          x.image = image[i].img;
+          return x;
+        });
+        setData(a);
+      });
   };
-  const addCart = () =>{
-
-  }
+  const addCart = (e) => {
+    let items = [];
+    // items.push(e._id);
+    console.log(items,"Afadskfjsdfkjds")
+    let late = {
+      items: items,
+      date: date,
+    };
+    fetch("http://54.174.247.198:9000/api/orderplace", {
+      method: "POST",
+      headers: { Authorization: localStorage.getItem("Authorization") },
+      body: JSON.stringify(late),
+    }).then((response) => response.json());
+  };
 
   return (
     <div>
@@ -126,31 +139,36 @@ function Login() {
             <span style={{ fontWeight: "bold", color: "red" }}>{passerr}</span>
           )}
           <br />
-          <button onClick={handleSubmit} className="btn btn-primary">Login</button>
+          <button onClick={handleSubmit} className="btn btn-primary">
+            Login
+          </button>
         </div>
       )}
       {submit && (
         <div>
           <div>Welcome:{userName}</div>
           <div className="product">
-          {datas?.map((d) => (
-            <div key={d.id} >
-              <img src={d.image} alt="" width="100" height="100"></img>
-              <div className="d-flex justify-content-between">
-                <div>
-              <p>{d.productsName}</p>
-              <p>{d.productPrice}</p>
+            {datas?.map((d) => (
+              <div key={d.id}>
+                <img src={d.image} alt="" width="100" height="100"></img>
+                <div className="d-flex justify-content-between">
+                  <div>
+                    <p>{d.productsName}</p>
+                    <p>{d.productPrice}</p>
+                  </div>
+                  <BsFillPlusSquareFill
+                    className="mt-3"
+                    key={d._id}
+                    onClick={(e) => addCart(e.target.value)}
+                  />
+                </div>
               </div>
-              <BsFillPlusSquareFill className="mt-3" onClick={(e) => addCart(e.target.value)}/>
-              </div>
-            </div>
-          ))}
+            ))}
           </div>
         </div>
       )}
     </div>
   );
 }
-
 
 export default Login;

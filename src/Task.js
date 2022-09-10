@@ -48,8 +48,7 @@ function Task() {
     fetch("http://54.174.247.198:9000/api/register", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify(late),
     })
@@ -122,12 +121,9 @@ function Task() {
           {datas?.map((d) => (
             <div key={d.id}>
               <p>{d.message}</p>
-              {/* <p>{d.productPrice}</p> */}
+              <p>{d.productPrice}</p>
             </div>
           ))}
-          {/* <div>Email:{email}</div>
-          <div>Password:{password}</div>
-          <div>Phone:{phone}</div> */}
         </div>
       )}
     </div>
